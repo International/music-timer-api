@@ -1,25 +1,42 @@
 class User < ActiveRecord::Base
   attr_accessor :password, :country, :state, :city
-  before_save :encrypt_password
+  before_save :encrypt_password, unless: :from_facebook?
+  after_save :clear_password, unless: :from_facebook?
   after_save :update_references
-  after_save :clear_password
 
   EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
   MIN_PASSWORD_LENGTH = 6
 
-  validates :first_name, :last_name, presence: true
-  validates :email, presence: true, uniqueness: true,
-    :format => EMAIL_REGEX, length: { in: 3..20 }
-  validates :password, { confirmation: true,
-    length: { in: MIN_PASSWORD_LENGTH..20, :on => :create } }
+  belongs_to :country_reference
+  belongs_to :state_reference
+  belongs_to :city_reference
 
-  has_one :country_reference
-  has_one :state_reference
-  has_one :city_reference
+  has_many :goals
+  has_many :pieces
+
+  validates :first_name, :last_name, presence: true, unless: :from_facebook?
+  validates :email, presence: true, uniqueness: true,
+    :format => EMAIL_REGEX, length: { in: 3..20 }, unless: :from_facebook?
+  validates :password, confirmation: true,
+    length: { in: MIN_PASSWORD_LENGTH..20, on: :create },
+    unless: :from_facebook?
+  validates :password_confirmation, presence: true, on: :create,
+    unless: :from_facebook?
+  validates :facebook_id, presence: { on: :create },
+    numericality: { only_integer: true }, uniqueness: true,
+    if: ->{ self.email.blank? && self.password.blank? }
 
   def authenticate( password_attempt )
     self.encrypted_password == BCrypt::Engine.hash_secret(password_attempt,
       self.salt)
+  end
+
+  def start_session
+    Session.create( user: self )
+  end
+
+  def from_facebook?
+    !self.facebook_id.blank?
   end
 
   protected

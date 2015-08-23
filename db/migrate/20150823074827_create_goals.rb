@@ -4,6 +4,7 @@ class CreateGoals < ActiveRecord::Migration
       t.integer :time_unit
       t.decimal :unit_value
       t.integer :piece_id
+      t.integer :user_id
 
       t.timestamps null: false
     end

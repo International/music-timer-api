@@ -6,9 +6,9 @@ rails g model city name:string
 
 rails g model piece title:string description:string user_id:integer
 
-rails g model practice name:string seconds:decimal state: integer recorded_at: timestamp piece_id:integer
+rails g model practice name:string seconds:decimal state:integer recorded_at:timestamp piece_id:integer
 
-rails g model goal time_unit:integer unit_value:decimal piece_id:integer
+rails g model goal time_unit:integer unit_value:decimal piece_id:integer user_id:integer
 
 rails g model session user_id:integer token:string
 

@@ -4,8 +4,12 @@ module RestControllable
 
     before_action :find_object, only: [:update, :destroy, :show]
 
+    def index
+      render json: self.model_context
+    end
+
     def show
-      render self.current_instance
+      render json: self.current_instance
     end
 
     def destroy
@@ -17,13 +21,18 @@ module RestControllable
 
     attr_accessor :current_instance
 
-    def model_class
+    def render_errors
+      render(json: { errors: self.current_instance.errors },
+        status: :unprocessable_entity)
+    end
+
+    def model_context
       raise NotImplementedError
     end
 
     def find_object
-      self.current_instance = model_class.find_by_id(params[:id])
-      if obj.blank?
+      self.current_instance = model_context.find_by_id(params[:id])
+      if self.current_instance.blank?
         render(status: :not_found, nothing: true) and return false
       end
     end

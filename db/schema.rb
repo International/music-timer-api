@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150820055804) do
+ActiveRecord::Schema.define(version: 20150823074827) do
 
   create_table "cities", force: :cascade do |t|
     t.string   "name"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20150820055804) do
     t.integer  "time_unit"
     t.decimal  "unit_value"
     t.integer  "piece_id"
+    t.integer  "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -44,10 +45,8 @@ ActiveRecord::Schema.define(version: 20150820055804) do
   create_table "practices", force: :cascade do |t|
     t.string   "name"
     t.decimal  "seconds"
-    t.string   "state"
-    t.string   "integer"
-    t.string   "recorded_at"
-    t.string   "timestamp"
+    t.integer  "state"
+    t.datetime "recorded_at"
     t.integer  "piece_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
