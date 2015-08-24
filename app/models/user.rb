@@ -20,8 +20,8 @@ class User < ActiveRecord::Base
   validates :password, confirmation: true,
     length: { in: MIN_PASSWORD_LENGTH..20, on: :create },
     unless: :from_facebook?
-  validates :password_confirmation, presence: true, on: :create,
-    unless: :from_facebook?
+  validates :password_confirmation, presence: true,
+    if: :should_confirm_password?
   validates :facebook_id, presence: { on: :create },
     numericality: { only_integer: true }, uniqueness: true,
     if: ->{ self.email.blank? && self.password.blank? }
@@ -40,6 +40,10 @@ class User < ActiveRecord::Base
   end
 
   protected
+
+  def should_confirm_password?
+    !self.from_facebook? && self.password.present?
+  end
 
   def encrypt_password
     if self.password.present?
