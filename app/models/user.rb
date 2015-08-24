@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
 
   validates :first_name, :last_name, presence: true, unless: :from_facebook?
   validates :email, presence: true, uniqueness: true,
-    :format => EMAIL_REGEX, length: { in: 3..20 }, unless: :from_facebook?
+    :format => EMAIL_REGEX, length: { in: 3..40 }, unless: :from_facebook?
   validates :password, confirmation: true,
     length: { in: MIN_PASSWORD_LENGTH..20, on: :create },
     unless: :from_facebook?
