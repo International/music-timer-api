@@ -5,11 +5,21 @@ Rails application that consists in a REST API for the mobile application
 
 ## Installation
 
-TODO: Describe the installation process
+- Clone this repository
+- Step into project directory
+- Run the commands:
+```
+$ bundle install
+$ rake db:schema:load
+$ rake db:migrate
+```
 
 ## Usage
 
-TODO: Write usage instructions
+Just start the application and consume the services from any client.
+```
+$ rails s
+```
 
 ## License
 
